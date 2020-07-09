@@ -8,11 +8,19 @@ class Message extends React.Component {
         }    
     }
 
+    /** setState is asynchronous, and can receive a callback */
+    changeMessage () {
+        this.setState(
+            { message: 'Welcome subscriber' },
+            () => console.log(this.state.message)
+        )
+    }
+
     render () {
         return (
             <div>
                 <h1>{ this.state.message }</h1>
-                <button onClick={() => { this.setState({ message: 'Welcome subscriber' }) }}>Subscribe</button>
+                <button onClick={() => { this.changeMessage() }}>Subscribe</button>
             </div>
         )
     }
