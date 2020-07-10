@@ -1,4 +1,6 @@
 /** Mongo */
-import { Mongo } from 'meteor/mongo';
+import { Mongo } from 'meteor/mongo'
 
-export default new Mongo.Collection('tasks');
+const TasksCollection = new Mongo.Collection('tasks')
+
+module.exports = { TasksCollection }

@@ -2,7 +2,7 @@
 import { Meteor } from 'meteor/meteor'
 
 /** Database management */
-import Tasks from '/imports/api/tasks'
+import { TasksCollection } from '/imports/api/tasks'
 
 function insertTask(taskTitle) {
   Tasks.insert({ task: taskTitle })
@@ -11,7 +11,7 @@ function insertTask(taskTitle) {
 /** This function will run as soon as the server process is finished starting. */
 Meteor.startup(() => {
   // If the Links collection is empty, add some data.
-  if (Tasks.find().count() === 0) {
+  if (TasksCollection.find().count() === 0) {
     [
       'First Task',
       'Second Task',

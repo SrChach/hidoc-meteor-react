@@ -5,13 +5,10 @@ import React from 'react'
 import { useTracker } from 'meteor/react-meteor-data'
 
 /** Data */
-import TasksCollection from '/imports/api/tasks'
+import { TasksCollection } from '/imports/api/tasks'
 
 /** Components */
 import { Task } from './Task'
-import Message from './Message'
-import Counter from './Counter'
-import ClassClick from './ClassClick'
 import TaskForm from './TaskForm'
 
 
@@ -31,26 +28,23 @@ export const App = () => {
   const deleteTask = ({ _id }) => TasksCollection.remove(_id);
 
   return (
-    <div>
+    <div className="simple-todos-react">
       <h1>Welcome to Meteor!</h1>
 
-      {
-        tasks.map(
-          task => <Task
-                    key={task._id}
-                    task={task}
-                    onCheckboxClick={toggleChecked}
-                    onDeleteClick={deleteTask}
-                  />
-        )
-      }
+      <ul className="tasks">
+        {
+          tasks.map(
+            task => <Task
+                      key={task._id}
+                      task={task}
+                      onCheckboxClick={toggleChecked}
+                      onDeleteClick={deleteTask}
+                    />
+          )
+        }
+      </ul>
 
       <TaskForm/>
-
-      {/* Not using this */}
-      <Message/>
-      <Counter/>
-      <ClassClick></ClassClick>
     </div>
   )
 }
