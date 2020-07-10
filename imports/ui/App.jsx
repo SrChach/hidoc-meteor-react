@@ -7,6 +7,7 @@ import { Info } from './Info.jsx';
 import { Task } from './Task.jsx'
 import Message from './Message'
 import Counter from './Counter.jsx'
+import ClassClick from './ClassClick'
 
 const tasks = [
   {_id: 1, text: 'First Task'},
@@ -22,5 +23,6 @@ export const App = () => (
     { tasks.map(task => <Task key={ task._id } task={ task.text } text='Example'/>) }
     <Message/>
     <Counter/>
+    <ClassClick></ClassClick>
   </div>
 );
