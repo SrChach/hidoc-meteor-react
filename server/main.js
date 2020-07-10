@@ -1,17 +1,13 @@
 /** Meteor */
 import { Meteor } from 'meteor/meteor'
 
-/** Database management */
-import { TasksCollection } from '/imports/api/tasks'
+/** Data management */
+import { isTaskListEmpty, addTask } from '/imports/api/tasks'
 
-function insertTask(taskTitle) {
-  Tasks.insert({ task: taskTitle })
-}
 
 /** This function will run as soon as the server process is finished starting. */
 Meteor.startup(() => {
-  // If the Links collection is empty, add some data.
-  if (TasksCollection.find().count() === 0) {
+  if (isTaskListEmpty()) {
     [
       'First Task',
       'Second Task',
@@ -20,6 +16,6 @@ Meteor.startup(() => {
       'Fifth Task',
       'Sixth Task',
       'Seventh Task'
-    ].forEach(insertTask)
+    ].forEach(taskTitle => addTask(taskTitle))
   }
 });

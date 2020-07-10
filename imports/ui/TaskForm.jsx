@@ -1,5 +1,9 @@
+/** React */
 import React, { useState } from 'react'
-import TasksCollection from '/imports/api/tasks'
+
+/** Data management */
+import { addTask } from '/imports/api/tasks'
+
 
 export default TaskForm = () => {
     const [text, setText] = useState("")
@@ -7,16 +11,7 @@ export default TaskForm = () => {
     const saveTask = () => {
         if (!text) return;
 
-        TasksCollection.insert(
-            {
-                task: text.trim(),
-                createdAt: new Date()
-            },
-            function(err, record_id){
-                console.log("Record_id " + record_id)
-            }
-        )
-
+        addTask(text)
         setText("")
     }
 

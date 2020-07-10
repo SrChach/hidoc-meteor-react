@@ -5,7 +5,7 @@ import React from 'react'
 import { useTracker } from 'meteor/react-meteor-data'
 
 /** Data */
-import { TasksCollection } from '/imports/api/tasks'
+import { listTasks, deleteTask, changeTaskStatus } from '/imports/api/tasks'
 
 /** Components */
 import { Task } from './Task'
@@ -14,22 +14,12 @@ import TaskForm from './TaskForm'
 
 export const App = () => {
   const tasks = useTracker(
-    () => TasksCollection.find({}, { sort: { createdAt: -1 } }).fetch()
+    () => listTasks()
   );
-
-  const toggleChecked = ({ _id, isChecked }) => {
-    TasksCollection.update(_id, {
-      $set: {
-        isChecked: !isChecked
-      }
-    })
-  }
-
-  const deleteTask = ({ _id }) => TasksCollection.remove(_id);
 
   return (
     <div className="simple-todos-react">
-      <h1>Welcome to Meteor!</h1>
+      <h1>Your to-do amazing list!</h1>
 
       <ul className="tasks">
         {
@@ -37,7 +27,7 @@ export const App = () => {
             task => <Task
                       key={task._id}
                       task={task}
-                      onCheckboxClick={toggleChecked}
+                      onCheckboxClick={changeTaskStatus}
                       onDeleteClick={deleteTask}
                     />
           )
