@@ -2,12 +2,12 @@
 import { Meteor } from 'meteor/meteor'
 
 /** Data management */
-import { isTaskListEmpty, addTask } from '/imports/api/tasks'
+import { countTasks, addTask } from '/imports/api/tasks'
 
 
 /** This function will run as soon as the server process is finished starting. */
 Meteor.startup(() => {
-  if (isTaskListEmpty()) {
+  if (countTasks() === 0) {
     [
       'First Task',
       'Second Task',
