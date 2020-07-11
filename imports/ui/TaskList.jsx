@@ -11,8 +11,7 @@ import { listTasks, deleteTask, changeTaskStatus, countTasks } from '/imports/ap
 import { Task } from './Task'
 import TaskForm from './TaskForm'
 
-
-export const TaskList = () => {
+export const TaskList = ({ ownerId }) => {
   const isIgnoringCompleted = true
   const [hidingCompleted, setHidingCompleted] = useState(false)
 
@@ -52,7 +51,7 @@ export const TaskList = () => {
         }
       </ul>
 
-      <TaskForm/>
+      <TaskForm ownerId={ ownerId }/>
     </div>
   )
 }

@@ -5,13 +5,13 @@ import React, { useState } from 'react'
 import { addTask } from '/imports/api/tasks'
 
 
-export default TaskForm = () => {
+export default TaskForm = ({ ownerId }) => {
   const [text, setText] = useState("")
 
   const saveTask = () => {
     if (!text) return;
 
-    addTask(text)
+    addTask(text, ownerId)
     setText("")
   }
 

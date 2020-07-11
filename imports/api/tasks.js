@@ -15,8 +15,8 @@ const listTasks = (ignoreCompleted = false) => findTasks(ignoreCompleted).fetch(
 const countTasks = (ignoreCompleted = false) => findTasks(ignoreCompleted).count()
 
 /** Functions for adding and deleting Tasks */
-const addTask = (text) => TasksCollection.insert(
-  { task: text.trim(), createdAt: new Date() },
+const addTask = (text, ownerId) => TasksCollection.insert(
+  { task: text.trim(), createdAt: new Date(), ownerId: ownerId },
   function(err, record_id){
       console.log(`Added with the ID: '${record_id}'`)
   }
