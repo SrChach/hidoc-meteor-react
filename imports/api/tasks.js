@@ -1,6 +1,7 @@
 /** Mongo */
 import { Mongo } from 'meteor/mongo'
 import SimpleSchema from 'simpl-schema';
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
 
 
 const TasksCollection = new Mongo.Collection('tasks')
@@ -11,84 +12,88 @@ const findTasks = (ignoreCompleted = false) => {
   return TasksCollection.find(filterObject, { sort: { createdAt: -1 } })
 }
 
-/** Getting tasks info */
-const listTasks = (ignoreCompleted = false) => findTasks(ignoreCompleted).fetch()
-const countTasks = (ignoreCompleted = false) => findTasks(ignoreCompleted).count()
+/** Functions for getting tasks info */
+const listTasks = new ValidatedMethod({
+  name: 'tasks.listTasks',
+  validate: new SimpleSchema({
+    ignoreCompleted: { type: Boolean, defaultValue: false }
+  }).validator(),
+
+  run({ ignoreCompleted }) {
+    return findTasks(ignoreCompleted).fetch()
+  }
+})
+const countTasks = new ValidatedMethod({
+  name: 'tasks.countTasks',
+  validate: new SimpleSchema({
+    ignoreCompleted: { type: Boolean, defaultValue: false }
+  }).validator(),
+
+  run({ ignoreCompleted }) {
+    return findTasks(ignoreCompleted).count()
+  }
+})
 
 /** Functions for adding and deleting Tasks */
-const addTask = (text, ownerId) => TasksCollection.insert(
-  { task: text.trim(), createdAt: new Date(), ownerId: ownerId },
-  function(err, record_id){
-      console.log(`Added with the ID: '${record_id}'`)
-  }
-)
-const deleteTask = (_id) => TasksCollection.remove(_id)
+const addTask = new ValidatedMethod({
+  name: 'tasks.addTask',
+  validate: new SimpleSchema({
+    text: { type: String }
+  }).validator(),
 
-/** Editing task info */
-const changeTaskStatus = (_id, isChecked) => {
-  TasksCollection.update(_id, {
-    $set: {
-      isChecked: !isChecked
-    }
-  })
-}
+  run({ text }) {
+    const ownerId = Meteor.userId()
 
-
-Meteor.methods({
-  'tasks.listTasks'({ ignoreCompleted }) {
-    new SimpleSchema({
-      ignoreCompleted: { type: Boolean, defaultValue: false }
-    }).validate({ ignoreCompleted })
-
-    const myTasks = listTasks(ignoreCompleted)
-    return myTasks
-  },
-
-  'tasks.countTasks' ({ ignoreCompleted }) {
-    new SimpleSchema({
-      ignoreCompleted: { type: Boolean, defaultValue: false }
-    }).validate({ ignoreCompleted })
-
-    const tasksNumber = countTasks(ignoreCompleted)
-    return tasksNumber
-  },
-
-  'tasks.addTask' ({ text, ownerId }) {
-    new SimpleSchema({
-      text: { type: String },
-      ownerId: { type: String }
-    }).validate({ text, ownerId })
-
-    const userId = Meteor.userId()
-
-    if (!userId) {
+    if (!ownerId) {
       throw new Meteor.Error('tasks.addTask.unauthorized',
         'Forbidden. You need to be logged for adding tasks');
     }
 
-    const savedStatus = addTask(text, userId)
-    return savedStatus
-  },
+    /** Returns insertId
+     * NOTE:  Error management should be passed as second argument
+     */
+    return TasksCollection.insert({
+      task: text.trim(),
+      createdAt: new Date(),
+      ownerId: ownerId
+    })
+  }
+})
 
-  // 'tasks.deleteTask' ({ ignoreCompleted }) {
-  //   new SimpleSchema({
-  //     ignoreCompleted: { type: Boolean, defaultValue: false }
-  //   }).validate({ ignoreCompleted })
+const deleteTask = new ValidatedMethod({
+  name: 'tasks.deleteTask',
+  validate: new SimpleSchema({
+    id: { type: String }
+  }).validator(),
 
-  //   const tasksNumber = countTasks(ignoreCompleted)
-  //   return tasksNumber
-  // },
+  run({ id }) {
+    const ownerId = Meteor.userId()
 
-  // 'tasks.changeTaskStatus' ({ ignoreCompleted }) {
-  //   new SimpleSchema({
-  //     ignoreCompleted: { type: Boolean, defaultValue: false }
-  //   }).validate({ ignoreCompleted })
+    if (!ownerId) {
+      throw new Meteor.Error('tasks.addTask.unauthorized',
+        'Forbidden. You need to be logged for adding tasks');
+    }
 
-  //   const tasksNumber = countTasks(ignoreCompleted)
-  //   return tasksNumber
-  // }
+    const removedStatus = TasksCollection.remove(id)
+    return `added task with ID ${removedStatus}`
+  }
+})
 
-});
+/** Functions for edit task info */
+const changeTaskStatus = new ValidatedMethod({
+  name: 'tasks.changeTaskStatus',
+  validate: new SimpleSchema({
+    id: String,
+    isChecked: Boolean
+  }).validator(),
 
+  run({ id, isChecked }) {
+    return TasksCollection.update(id, {
+      $set: {
+        isChecked: !isChecked
+      }
+    })
+  }
+})
 
 module.exports = { listTasks, deleteTask, changeTaskStatus, addTask, countTasks }

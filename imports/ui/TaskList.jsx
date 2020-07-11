@@ -5,20 +5,20 @@ import React, { useState } from 'react'
 import { useTracker } from 'meteor/react-meteor-data'
 
 /** Data */
-import { listTasks, deleteTask, changeTaskStatus, countTasks } from '/imports/api/tasks'
+import { listTasks, countTasks } from '/imports/api/tasks'
 
 /** Components */
 import { Task } from './Task'
 import TaskForm from './TaskForm'
 
-export const TaskList = ({ ownerId }) => {
+export const TaskList = () => {
   const isIgnoringCompleted = true
   const [hidingCompleted, setHidingCompleted] = useState(false)
 
   const {tasks, incompleteTasksCount} = useTracker(() => (
     {
-      tasks: listTasks(hidingCompleted),
-      incompleteTasksCount: countTasks(isIgnoringCompleted)
+      tasks: listTasks.call({ ignoreCompleted: hidingCompleted}),
+      incompleteTasksCount: countTasks.call({ ignoreCompleted: isIgnoringCompleted})
     }
   ));
 
@@ -44,14 +44,12 @@ export const TaskList = ({ ownerId }) => {
             task => <Task
                       key={task._id}
                       task={task}
-                      onCheckboxClick={changeTaskStatus}
-                      onDeleteClick={deleteTask}
                     />
           )
         }
       </ul>
 
-      <TaskForm ownerId={ ownerId }/>
+      <TaskForm/>
     </div>
   )
 }

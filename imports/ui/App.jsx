@@ -1,5 +1,5 @@
 /** React */
-import React, { useState } from 'react'
+import React from 'react'
 
 /** Meteor */
 import { useTracker } from 'meteor/react-meteor-data'
@@ -21,6 +21,6 @@ export const App = () => {
   if (!user) {
     return <LoginForm/>
   }
-  return <TaskList ownerId={user._id}/>
+  return <TaskList/>
 
 }

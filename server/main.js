@@ -13,16 +13,4 @@ Meteor.startup(() => {
       password: 'hidoc-password'
     });
   }
-
-  if (countTasks() === 0) {
-    [
-      'First Task',
-      'Second Task',
-      'Third Task',
-      'Fourth Task',
-      'Fifth Task',
-      'Sixth Task',
-      'Seventh Task'
-    ].forEach(taskTitle => addTask(taskTitle))
-  }
 });
