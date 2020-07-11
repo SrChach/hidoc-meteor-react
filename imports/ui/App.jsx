@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 
 /** Meteor */
 import { useTracker } from 'meteor/react-meteor-data'
+import { Meteor } from 'meteor/meteor'
 
 /** Data */
 

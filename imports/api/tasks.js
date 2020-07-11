@@ -1,5 +1,6 @@
 /** Mongo */
 import { Mongo } from 'meteor/mongo'
+import SimpleSchema from 'simpl-schema';
 
 
 const TasksCollection = new Mongo.Collection('tasks')
@@ -31,5 +32,63 @@ const changeTaskStatus = (_id, isChecked) => {
     }
   })
 }
+
+
+Meteor.methods({
+  'tasks.listTasks'({ ignoreCompleted }) {
+    new SimpleSchema({
+      ignoreCompleted: { type: Boolean, defaultValue: false }
+    }).validate({ ignoreCompleted })
+
+    const myTasks = listTasks(ignoreCompleted)
+    return myTasks
+  },
+
+  'tasks.countTasks' ({ ignoreCompleted }) {
+    new SimpleSchema({
+      ignoreCompleted: { type: Boolean, defaultValue: false }
+    }).validate({ ignoreCompleted })
+
+    const tasksNumber = countTasks(ignoreCompleted)
+    return tasksNumber
+  },
+
+  'tasks.addTask' ({ text, ownerId }) {
+    new SimpleSchema({
+      text: { type: String },
+      ownerId: { type: String }
+    }).validate({ text, ownerId })
+
+    const userId = Meteor.userId()
+
+    if (!userId) {
+      throw new Meteor.Error('tasks.addTask.unauthorized',
+        'Forbidden. You need to be logged for adding tasks');
+    }
+
+    const savedStatus = addTask(text, userId)
+    return savedStatus
+  },
+
+  // 'tasks.deleteTask' ({ ignoreCompleted }) {
+  //   new SimpleSchema({
+  //     ignoreCompleted: { type: Boolean, defaultValue: false }
+  //   }).validate({ ignoreCompleted })
+
+  //   const tasksNumber = countTasks(ignoreCompleted)
+  //   return tasksNumber
+  // },
+
+  // 'tasks.changeTaskStatus' ({ ignoreCompleted }) {
+  //   new SimpleSchema({
+  //     ignoreCompleted: { type: Boolean, defaultValue: false }
+  //   }).validate({ ignoreCompleted })
+
+  //   const tasksNumber = countTasks(ignoreCompleted)
+  //   return tasksNumber
+  // }
+
+});
+
 
 module.exports = { listTasks, deleteTask, changeTaskStatus, addTask, countTasks }

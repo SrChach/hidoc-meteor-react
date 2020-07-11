@@ -1,9 +1,6 @@
 /** React */
 import React, { useState } from 'react'
 
-/** Data management */
-import { addTask } from '/imports/api/tasks'
-
 
 export default TaskForm = ({ ownerId }) => {
   const [text, setText] = useState("")
@@ -11,8 +8,18 @@ export default TaskForm = ({ ownerId }) => {
   const saveTask = () => {
     if (!text) return;
 
-    addTask(text, ownerId)
-    setText("")
+    Meteor.call(
+      'tasks.addTask',
+      { text: text, ownerId: ownerId },
+      (err, res) => {
+        if (err)
+          alert(err)
+        else {
+          console.log(`Added by user ${res}`)
+          setText("")
+        }
+      }
+    )
   }
 
   return (
