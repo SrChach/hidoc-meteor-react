@@ -21,17 +21,20 @@ export const Task = ({ task }) => {
               { Boolean(task.isPrivate) ? 'Private' : 'Public' }
             </button>
           </div>
-        ) : ''
+        ) : <button>&#8728;</button>
       }
 
       <span>{ task.task }</span>
       
-      <input
-        type="checkbox"
-        checked={ Boolean(task.isChecked) }
-        onClick={() => changeTaskStatus.call({ id: task._id, isChecked: Boolean(task.isChecked) }) }
-        readOnly
-      />
+      { isMine ? (
+          <input
+            type="checkbox"
+            checked={ Boolean(task.isChecked) }
+            onClick={() => changeTaskStatus.call({ id: task._id, isChecked: Boolean(task.isChecked) }) }
+            readOnly
+          />
+        ) : ''
+      }
     </li>
   )
 }

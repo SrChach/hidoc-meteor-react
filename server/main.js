@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor'
 
 /** Registering data management */
 import '/imports/api/tasks/expose';
+import '/imports/api/tasks/data';
 
 
 /** This function will run as soon as the server process is finished starting. */

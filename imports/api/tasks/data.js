@@ -7,11 +7,11 @@ class Task {
   }
 
   /** Base model for finding and filtering tasks */
-  find (ignoreCompleted = false) {
+  find (ignoreCompleted = false, userId = null) {
     let filtersObject = {
       $or: [
         { isPrivate: { $ne: true } },
-        { ownerId: Meteor.userId() }
+        { ownerId: userId }
       ]
     }
     if (ignoreCompleted)
@@ -20,16 +20,16 @@ class Task {
     return this.collection.find(filtersObject, { sort: { createdAt: -1 } })
   }
 
+  list (ignoreCompleted = false, userId = null) {
+    return this.find(ignoreCompleted, userId).fetch()
+  }
+
+  count (ignoreCompleted = false, userId = null) {
+    return this.find(ignoreCompleted, userId).count()
+  }
+
   findOne (id) {
     return this.collection.findOne(id)
-  }
-
-  list (ignoreCompleted = false) {
-    return this.find(ignoreCompleted).fetch()
-  }
-
-  count (ignoreCompleted = false) {
-    return this.find(ignoreCompleted).count()
   }
 
   /** NOTE: Error management should be passed as second argument */
@@ -45,6 +45,10 @@ class Task {
   delete (id) {
     /** Returns if deleted or not */
     return this.collection.remove(id)
+  }
+
+  deleteAll () {
+    return this.collection.remove({})
   }
 
   setChecked (id, isChecked) {

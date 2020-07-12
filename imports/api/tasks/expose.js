@@ -27,7 +27,7 @@ const listTasks = new ValidatedMethod({
   }).validator(),
 
   run({ ignoreCompleted }) {
-    return taskManager.list(ignoreCompleted)
+    return taskManager.list(ignoreCompleted, Meteor.userId())
   }
 })
 
@@ -38,7 +38,7 @@ const countTasks = new ValidatedMethod({
   }).validator(),
 
   run({ ignoreCompleted }) {
-    return taskManager.count(ignoreCompleted)
+    return taskManager.count(ignoreCompleted, Meteor.userId())
   }
 })
 
