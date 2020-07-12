@@ -5,7 +5,20 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method'
 /** Data Manager */
 import TaskManager from './data'
 
+
 const taskManager = new TaskManager()
+
+/** Validations */
+function validateOwner (id, methodName = 'anonymous') {
+  const userId = Meteor.userId()
+  const task = taskManager.findOne(id);
+
+  if (!userId || task.ownerId !== userId)
+    throw new Meteor.Error(
+      `tasks.addTask.${methodName}`,
+      'Not authorized.'
+    )
+}
 
 const listTasks = new ValidatedMethod({
   name: 'tasks.listTasks',
@@ -55,14 +68,7 @@ const deleteTask = new ValidatedMethod({
   }).validator(),
 
   run({ id }) {
-    const ownerId = Meteor.userId()
-
-    if (!ownerId)
-      throw new Meteor.Error(
-        'tasks.addTask.unauthorized',
-        'Forbidden. You need to be logged for deleting tasks'
-      )
-
+    validateOwner(id, 'deleteTask')
     return taskManager.delete(id)
   }
 })
@@ -75,8 +81,22 @@ const changeTaskStatus = new ValidatedMethod({
   }).validator(),
 
   run({ id, isChecked }) {
-    return taskManager.changeStatus(id, isChecked)
+    validateOwner(id, 'changeTaskStatus')
+    return taskManager.setChecked(id, !isChecked)
   }
 })
 
-module.exports = { listTasks, deleteTask, changeTaskStatus, addTask, countTasks }
+const changeTaskPrivate = new ValidatedMethod({
+  name: 'tasks.changeTaskPrivate',
+  validate: new SimpleSchema({
+    id: String,
+    isPrivate: Boolean
+  }).validator(),
+
+  run({ id, isPrivate }) {
+    validateOwner(id, 'changeTaskPrivate')
+    return taskManager.setPrivate(id, !isPrivate)
+  }
+})
+
+module.exports = { listTasks, deleteTask, changeTaskStatus, addTask, countTasks, changeTaskPrivate }

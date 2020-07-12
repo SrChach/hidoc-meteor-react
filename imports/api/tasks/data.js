@@ -1,3 +1,4 @@
+/** Meteor */
 import { Mongo } from 'meteor/mongo'
 
 class Task {
@@ -7,8 +8,20 @@ class Task {
 
   /** Base model for finding and filtering tasks */
   find (ignoreCompleted = false) {
-    const filterObject = (ignoreCompleted) ? { isChecked: { $ne: true } } : {}
-    return this.collection.find(filterObject, { sort: { createdAt: -1 } })
+    let filtersObject = {
+      $or: [
+        { isPrivate: { $ne: true } },
+        { ownerId: Meteor.userId() }
+      ]
+    }
+    if (ignoreCompleted)
+      filtersObject['isChecked'] = { $ne: true }
+
+    return this.collection.find(filtersObject, { sort: { createdAt: -1 } })
+  }
+
+  findOne (id) {
+    return this.collection.findOne(id)
   }
 
   list (ignoreCompleted = false) {
@@ -34,11 +47,15 @@ class Task {
     return this.collection.remove(id)
   }
 
-  changeStatus (id, isChecked) {
+  setChecked (id, isChecked) {
     return this.collection.update(id, {
-      $set: {
-        isChecked: !isChecked
-      }
+      $set: { isChecked }
+    })
+  }
+
+  setPrivate (id, isPrivate) {
+    return this.collection.update(id, {
+      $set: { isPrivate }
     })
   }
 
