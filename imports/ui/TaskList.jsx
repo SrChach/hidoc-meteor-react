@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import { useTracker } from 'meteor/react-meteor-data'
 
 /** Data */
-import { listTasks, countTasks } from '/imports/api/tasks'
+import { listTasks, countTasks } from '/imports/api/tasks/expose'
 
 /** Components */
 import { Task } from './Task'

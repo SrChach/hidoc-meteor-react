@@ -3,7 +3,7 @@ import React from 'react'
 import classnames from 'classnames'
 
 /** Data */
-import { deleteTask, changeTaskStatus } from '/imports/api/tasks'
+import { deleteTask, changeTaskStatus } from '/imports/api/tasks/expose'
 
 export const Task = ({ task }) => {
   const classes = classnames('task', {
