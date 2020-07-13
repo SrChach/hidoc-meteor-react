@@ -22,3 +22,4 @@ accounts-password
 mdg:validated-method
 meteortesting:mocha
 autopublish
+velocity:meteor-stubs

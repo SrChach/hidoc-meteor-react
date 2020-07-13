@@ -33,7 +33,7 @@ export const Task = ({ task }) => {
             onClick={() => changeTaskStatus.call({ id: task._id, isChecked: Boolean(task.isChecked) }) }
             readOnly
           />
-        ) : ''
+        ) : <input type="checkbox" checked={ false } readOnly/>
       }
     </li>
   )

@@ -1,9 +1,15 @@
 /** Meteor */
 import { Mongo } from 'meteor/mongo'
 
+const collection = new Mongo.Collection('tasks')
+
+const getTasksCollection = () => {
+    return collection
+}
+
 class Task {
   constructor () {
-    this.collection = new Mongo.Collection('tasks')
+    this.collection = getTasksCollection()
   }
 
   /** Base model for finding and filtering tasks */
