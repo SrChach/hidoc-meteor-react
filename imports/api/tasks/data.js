@@ -38,7 +38,9 @@ class Task {
     return this.collection.insert({
       task: text.trim(),
       createdAt: new Date(),
-      ownerId: ownerId
+      ownerId: ownerId,
+      isChecked: false,
+      isPrivate: false
     })
   }
 
