@@ -55,7 +55,6 @@ Y, como todo, tiene sus ventajas y desventajas. Lo que mostraré aquí es desde 
 
 
 **Desventajas**
-- No hay instalación via NPM. El gestor de paquetes interno de Meteor es suyo. No parece abierto.
 - La compilación no es nativa, de forma que los archivos resultantes quedan pesados y no están optimizados para el dispositivo
 - Se incluye automáticamente código de Meteor que, en ocasiones (Al menos desde mi punto de vista) es un poco borroso el qué hace en realidad. Baja personalización en ese sentido.
 - En casos de conexión a datos se te restringe un poco, por que solo puedes usar los métodos de Meteor
@@ -63,16 +62,15 @@ Y, como todo, tiene sus ventajas y desventajas. Lo que mostraré aquí es desde 
 - Al parecer solo viene incluido MongoDB como gestor de datos
 
 
-
 Otras ventajas y desventajas, independientes de la arquitectura
 
 **Ventajas**
-- El useTracker parece ser una maravilla. Checaré más
+- El useTracker parece ser una maravilla. Checaré más.
 
 **Desventajas**
 - La documentación y ejemplos son de calidad media. No demasiado explícita en cuanto a detalles y ejemplos
 - La comunidad no es tan grande. Muchos de los paquetes que busqué tuvieron su última actualización en el 2019
-- No veo que tenga un linter integrado, investigaré más
+- No veo que tenga un linter integrado
 - No muestra errores de compilación del frontend en la consola
 
 ### Mi experiencia desarrollando
@@ -91,25 +89,26 @@ Algunas de las dudas y problemas que tuve fueron:
 - Diferencias a llamarlos desde Frontend y Backend?
 - Si se exportan y se importan desde otro módulo, cómo llamarles sin que choquen entre ellos?
 
-Y bueno perdí tiempo dado que no podía hacer funcionar bien ese módulo. Hasta que usé [este otro enfoque](https://guide.meteor.com/methods.html#validated-method)
+Y bueno perdí tiempo dado que no podía hacer funcionar bien ese módulo. Hasta que usé [este otro enfoque](https://guide.meteor.com/methods.html#validated-method) que me permitió realizar todo más fácilmente
 
 #### Segundo problema
 
 El segundo problema fué que, dado que me desacoplé del tutorial y hice los meteor methods exportables, en lugar de algunos datos expuestos como cursores, no podía hacer 'publish' y 'subscribe' a ellos y que hubiera una respuesta
 
-Algunas de mis dudas fueron y son
+Algunas de mis dudas son aún
 
 - Qué llamo desde el cliente? Call, Run...?
 - Cómo interactúan con el useTracker? Qué es lo que registro en él y que es lo que trackea? (El ejemplo no es claro)
 - Puedo, para empezar, trackear un Metheor Method desde el useTracker? Cómo obtengo una respuesta.
 
-Y bueno, cuando decidí echar el cambio anterior para atrás y manejar cursores... resultó que no era tan compatible. Se detectaron dos colecciones de Mongo abiertas a la misma base, y el proyecto crashep
+No pude solucionar esto, de forma que tomé otro camino.
+
 
 #### Camino que seguí
 
-De forma que el proyecto aún está sin el `remove autopublish`, y aunque aislé bien los métodos y su uso, no encuentro cómo usarlos. Incluso ya construí un test, acoplándome a lo que hice y sus capacidades actuales.
+De forma que el proyecto aún está sin el `remove autopublish`, y aunque aislé bien los métodos y su uso, no encuentro cómo usarlos. Incluso ya construí tests, acoplándome a lo que hice y sus capacidades actuales.
 
-Nota divertida: El ejemplo tampoco es claro de cómo funciona el mocking de datos.
+Mi último problema fué mi falta de conocimiento del mocking de datos
 
 ### TDD
 
@@ -129,4 +128,8 @@ Ahora haré un análisis corto de las ventajas y desventajas del TDD
 
 ### Conclusiones
 
-Mi proyecto aún está lejos de concluirse. Cambiaré varias cosas de aquí en cuanto lo haga
+Aún me faltan conocimientos necesarios para manejar fluidamente el framework. Batallé un poco al aislar capacidades y hacer los métodos testeables y mi falta de conocimientos de Meteor me hizo fallar mucho.
+
+Y bueno, hubo un imposible: al comenzar a programar sin Typescript y adoptarlo después me fué difícil migrarlo, de forma que no adopté ese cambio. Aún hay áreas de oportunidad para mí.
+
+Como sea, seguiré desarrollando posteriormente este ejemplo. Solo extendiendo los Tests y añadiendo Typescript en forma. Un saludo
